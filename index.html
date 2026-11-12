@@ -1,0 +1,885 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Phiếu Học Tập Tương Tác: Liên Kết Cộng Hóa Trị - Hóa Học 10 (v2)</title>
+<style>
+  :root {
+    --primary: #1e3a8a;
+    --primary-light: #3b82f6;
+    --teal: #0f766e;
+    --teal-bg: #f0fdfa;
+    --amber: #b45309;
+    --amber-bg: #fffbeb;
+    --slate: #1e293b;
+    --muted: #64748b;
+    --border: #cbd5e1;
+    --bg: #f8fafc;
+  }
+  * { box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--slate);
+    margin: 0;
+    padding: 0;
+    line-height: 1.55;
+  }
+  .container {
+    max-width: 1050px;
+    margin: 24px auto;
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+    overflow: hidden;
+    border: 1px solid #e2e8f0;
+  }
+  header {
+    background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%);
+    color: #fff;
+    padding: 24px 32px;
+    text-align: center;
+  }
+  header .badge {
+    display: inline-block;
+    background: rgba(147, 197, 253, 0.2);
+    color: #93c5fd;
+    font-size: 0.82rem;
+    font-weight: 700;
+    padding: 4px 12px;
+    border-radius: 999px;
+    letter-spacing: 0.5px;
+    margin-bottom: 8px;
+  }
+  header h1 {
+    margin: 0;
+    font-size: 1.75rem;
+    letter-spacing: 0.3px;
+  }
+  .student-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    background: #f1f5f9;
+    padding: 14px 32px;
+    border-bottom: 1px solid var(--border);
+    align-items: center;
+    justify-content: space-between;
+  }
+  .student-bar input {
+    border: 1px solid #94a3b8;
+    border-radius: 6px;
+    padding: 6px 10px;
+    font-size: 0.95rem;
+    background: #fff;
+  }
+  .tabs {
+    display: flex;
+    background: #e2e8f0;
+    padding: 6px 32px 0;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .tab-btn {
+    padding: 10px 20px;
+    border: none;
+    background: transparent;
+    font-weight: 700;
+    font-size: 0.96rem;
+    color: #475569;
+    cursor: pointer;
+    border-radius: 10px 10px 0 0;
+    transition: all 0.2s;
+  }
+  .tab-btn.active {
+    background: #fff;
+    color: var(--primary);
+    box-shadow: 0 -2px 8px rgba(0,0,0,0.05);
+  }
+  .tab-content {
+    display: none;
+    padding: 28px 32px;
+  }
+  .tab-content.active { display: block; }
+  h2.sec-title {
+    background: var(--primary);
+    color: #fff;
+    padding: 10px 16px;
+    border-radius: 8px;
+    font-size: 1.12rem;
+    margin-top: 0;
+  }
+  h2.sec-title.teal { background: var(--teal); }
+  h2.sec-title.rust { background: #7c2d12; }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 14px 0;
+    font-size: 0.94rem;
+  }
+  th, td {
+    border: 1px solid var(--border);
+    padding: 10px 12px;
+    vertical-align: middle;
+  }
+  th {
+    background: #dbeafe;
+    color: var(--primary);
+    font-weight: 700;
+    text-align: center;
+  }
+  th.teal-th {
+    background: #ccfbf1;
+    color: #115e59;
+  }
+  .grid-4 {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 14px;
+    margin: 16px 0;
+  }
+  .card {
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 12px;
+    background: #f8fafc;
+    text-align: center;
+  }
+  .card h4 {
+    margin: 0 0 4px;
+    color: var(--primary);
+    font-size: 0.96rem;
+  }
+  .card p.sub {
+    margin: 0 0 8px;
+    font-size: 0.82rem;
+    color: var(--muted);
+    font-style: italic;
+  }
+  .grid-2 {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+    gap: 16px;
+    margin: 16px 0;
+  }
+  .eb-box {
+    background: var(--amber-bg);
+    border-left: 4px solid #f59e0b;
+    padding: 12px 16px;
+    border-radius: 8px;
+    margin-top: 14px;
+  }
+  .exercise-card {
+    border: 1px solid #cbd5e1;
+    border-radius: 12px;
+    padding: 18px 20px;
+    margin-bottom: 20px;
+    background: #fff;
+  }
+  .exercise-card h3 {
+    margin-top: 0;
+    color: var(--teal);
+    font-size: 1.06rem;
+  }
+  select, input[type="text"], input[type="number"] {
+    padding: 6px 8px;
+    border: 1px solid #94a3b8;
+    border-radius: 6px;
+    font-size: 0.92rem;
+    width: 100%;
+  }
+  .mcq-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(440px, 1fr));
+    gap: 14px;
+  }
+  .mcq-item {
+    padding: 12px 14px;
+    background: #f8fafc;
+    border-radius: 10px;
+    border: 1px solid #e2e8f0;
+  }
+  .mcq-options label {
+    display: block;
+    margin: 6px 0;
+    cursor: pointer;
+    padding: 3px 6px;
+    border-radius: 5px;
+    transition: background 0.15s;
+  }
+  .mcq-options label:hover { background: #e2e8f0; }
+  .btn-bar {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    margin-top: 24px;
+    flex-wrap: wrap;
+  }
+  .btn {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: transform 0.15s, opacity 0.15s;
+  }
+  .btn:hover { opacity: 0.92; transform: translateY(-1px); }
+  .btn-submit { background: var(--teal); color: #fff; }
+  .btn-reset { background: #64748b; color: #fff; }
+  .btn-print { background: var(--primary); color: #fff; }
+  .result-box {
+    display: none;
+    margin-top: 20px;
+    padding: 18px 22px;
+    border-radius: 12px;
+    background: #ecfdf5;
+    border: 2px solid #10b981;
+  }
+  .correct-ans { color: #059669; font-weight: 700; font-size: 0.88rem; display: block; margin-top: 5px; }
+  .wrong-ans { color: #dc2626; font-weight: 700; font-size: 0.88rem; display: block; margin-top: 5px; }
+  @media print {
+    .tabs, .btn-bar { display: none !important; }
+    .tab-content { display: block !important; padding: 10px 0; }
+    .container { box-shadow: none; border: none; margin: 0; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <div class="badge">CHƯƠNG 3: LIÊN KẾT HÓA HỌC • HÓA HỌC 10 (GDPT 2018)</div>
+    <h1>PHIẾU HỌC TẬP CHUYÊN SÂU: LIÊN KẾT CỘNG HÓA TRỊ</h1>
+  </header>
+
+  <div class="student-bar">
+    <div><strong>Họ và tên:</strong> <input type="text" placeholder="Nhập họ và tên..." style="width:220px;"></div>
+    <div><strong>Lớp:</strong> <input type="text" placeholder="10A..." style="width:90px;"></div>
+    <div><strong>Ngày làm bài:</strong> <input type="text" value="12/11/2026" style="width:110px;"></div>
+  </div>
+
+  <div class="tabs">
+    <button class="tab-btn active" onclick="openTab('tab-theory', this)">📚 Phần A: Hệ Thống Kiến Thức & Mô Phỏng</button>
+    <button class="tab-btn" onclick="openTab('tab-practice', this)">✍️ Phần B & C: Luyện Tập & 20 Câu Trắc Nghiệm</button>
+  </div>
+
+  <!-- TAB 1: THEORY & VISUALS -->
+  <div id="tab-theory" class="tab-content active">
+    <h2 class="sec-title">PHẦN A. HỆ THỐNG KIẾN THỨC TRỌNG TÂM CẦN NẮM VỮNG</h2>
+    <p><strong>1. Bản chất liên kết cộng hóa trị:</strong> Được hình thành giữa hai nguyên tử bằng <strong>một hay nhiều cặp electron dùng chung</strong> (thường giữa các nguyên tử phi kim để đạt cấu hình electron bền vững của khí hiếm theo quy tắc octet). Khi cặp electron dùng chung chỉ do một nguyên tử đóng góp gọi là <strong>liên kết cho – nhận</strong> (&rarr;).</p>
+
+    <table>
+      <thead>
+        <tr>
+          <th style="width:22%;">Tiêu chí phân loại</th>
+          <th style="width:40%;">Các loại liên kết cộng hóa trị</th>
+          <th style="width:38%;">Đặc điểm nhận diện & Ví dụ chuẩn</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Theo số cặp e dùng chung</strong></td>
+          <td>
+            • <strong>Liên kết đơn (—):</strong> 1 cặp e chung (1&sigma;)<br>
+            • <strong>Liên kết đôi (=):</strong> 2 cặp e chung (1&sigma; + 1&pi;)<br>
+            • <strong>Liên kết ba (&equiv;):</strong> 3 cặp e chung (1&sigma; + 2&pi;)
+          </td>
+          <td>
+            • <strong>Đơn:</strong> H<sub>2</sub> (H—H), Cl<sub>2</sub> (Cl—Cl), HCl (H—Cl)<br>
+            • <strong>Đôi:</strong> O<sub>2</sub> (O=O), CO<sub>2</sub> (O=C=O), C<sub>2</sub>H<sub>4</sub><br>
+            • <strong>Ba:</strong> N<sub>2</sub> (N&equiv;N), C<sub>2</sub>H<sub>2</sub> (H—C&equiv;C—H)
+          </td>
+        </tr>
+        <tr>
+          <td><strong>Theo vị trí cặp e chung<br>(Hiệu độ âm điện &Delta;&chi;)</strong></td>
+          <td>
+            • <strong>Không phân cực:</strong> Cặp e chung nằm chính giữa hai nguyên tử (0 &le; &Delta;&chi; &lt; 0,4).<br>
+            • <strong>Phân cực (có cực):</strong> Cặp e chung lệch về phía nguyên tử có độ âm điện lớn hơn (0,4 &le; &Delta;&chi; &lt; 1,7).
+          </td>
+          <td>
+            • <strong>Không cực:</strong> H<sub>2</sub>, O<sub>2</sub>, N<sub>2</sub>, Cl<sub>2</sub> (&Delta;&chi; = 0); liên kết C—H trong CH<sub>4</sub> (&Delta;&chi; = 0,35).<br>
+            • <strong>Có cực:</strong> H<sup>&delta;+</sup>—Cl<sup>&delta;&minus;</sup> (&Delta;&chi; = 0,96); H<sub>2</sub>O; NH<sub>3</sub>; CO<sub>2</sub>.
+          </td>
+        </tr>
+        <tr>
+          <td><strong>Theo kiểu xen phủ orbital nguyên tử (AO)</strong></td>
+          <td>
+            • <strong>Liên kết xichma (&sigma;):</strong> Xen phủ trục dọc theo trục liên kết <em>z</em> (<strong>s–s, s–p<sub>z</sub>, p<sub>z</sub>–p<sub>z</sub></strong>). Vùng xen phủ nằm trên trục nối tâm hai hạt nhân &rarr; <em>bền</em>.<br>
+            • <strong>Liên kết pi (&pi;):</strong> Xen phủ bên (<strong>p<sub>x</sub>–p<sub>x</sub> hoặc p<sub>y</sub>–p<sub>y</sub></strong>). Vùng xen phủ nằm hai bên trục nối tâm &rarr; <em>kém bền hơn &sigma;</em>.
+          </td>
+          <td>
+            • <strong>Xen phủ trục s–s:</strong> H<sub>2</sub><br>
+            • <strong>Xen phủ trục s–p<sub>z</sub>:</strong> HCl, H<sub>2</sub>O, NH<sub>3</sub><br>
+            • <strong>Xen phủ trục p<sub>z</sub>–p<sub>z</sub>:</strong> Cl<sub>2</sub><br>
+            • <strong>Xen phủ bên p<sub>x</sub>–p<sub>x</sub> / p<sub>y</sub>–p<sub>y</sub>:</strong> liên kết &pi; trong O<sub>2</sub>, N<sub>2</sub>, C<sub>2</sub>H<sub>4</sub>.
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3 style="color:var(--primary); margin-bottom:6px;">Minh họa chuẩn: Công thức electron – Công thức Lewis – Công thức cấu tạo</h3>
+    <div class="grid-4">
+      <!-- HCl -->
+      <div class="card">
+        <h4>1. Hydrogen chloride (HCl)</h4>
+        <p class="sub">Liên kết đơn (1 cặp e chung)</p>
+        <svg viewBox="0 0 220 140" width="100%">
+          <text x="8" y="30" font-size="11" font-weight="bold" fill="#334155">CT e:</text>
+          <text x="85" y="32" font-size="16" font-weight="bold">H</text>
+          <circle cx="110" cy="23" r="3" fill="#dc2626"/><circle cx="110" cy="31" r="3" fill="#dc2626"/>
+          <text x="122" y="32" font-size="16" font-weight="bold">Cl</text>
+          <circle cx="127" cy="13" r="2.5" fill="#0f172a"/><circle cx="135" cy="13" r="2.5" fill="#0f172a"/>
+          <circle cx="127" cy="40" r="2.5" fill="#0f172a"/><circle cx="135" cy="40" r="2.5" fill="#0f172a"/>
+          <circle cx="145" cy="23" r="2.5" fill="#0f172a"/><circle cx="145" cy="31" r="2.5" fill="#0f172a"/>
+
+          <text x="8" y="80" font-size="11" font-weight="bold" fill="#334155">Lewis:</text>
+          <text x="85" y="82" font-size="16" font-weight="bold">H — Cl</text>
+          <circle cx="132" cy="63" r="2.5" fill="#0f172a"/><circle cx="140" cy="63" r="2.5" fill="#0f172a"/>
+          <circle cx="132" cy="90" r="2.5" fill="#0f172a"/><circle cx="140" cy="90" r="2.5" fill="#0f172a"/>
+          <circle cx="150" cy="73" r="2.5" fill="#0f172a"/><circle cx="150" cy="81" r="2.5" fill="#0f172a"/>
+
+          <text x="8" y="125" font-size="11" font-weight="bold" fill="#334155">CTCT:</text>
+          <text x="95" y="127" font-size="16" font-weight="bold" fill="#1d4ed8">H — Cl</text>
+        </svg>
+      </div>
+
+      <!-- O2 -->
+      <div class="card">
+        <h4>2. Oxygen (O<sub>2</sub>)</h4>
+        <p class="sub">Liên kết đôi (2 cặp e chung)</p>
+        <svg viewBox="0 0 220 140" width="100%">
+          <text x="8" y="30" font-size="11" font-weight="bold" fill="#334155">CT e:</text>
+          <text x="75" y="32" font-size="16" font-weight="bold">O</text>
+          <circle cx="77" cy="13" r="2.5" fill="#0f172a"/><circle cx="85" cy="13" r="2.5" fill="#0f172a"/>
+          <circle cx="77" cy="40" r="2.5" fill="#0f172a"/><circle cx="85" cy="40" r="2.5" fill="#0f172a"/>
+          <circle cx="102" cy="23" r="3" fill="#dc2626"/><circle cx="102" cy="31" r="3" fill="#dc2626"/>
+          <circle cx="111" cy="23" r="3" fill="#dc2626"/><circle cx="111" cy="31" r="3" fill="#dc2626"/>
+          <text x="125" y="32" font-size="16" font-weight="bold">O</text>
+          <circle cx="127" cy="13" r="2.5" fill="#0f172a"/><circle cx="135" cy="13" r="2.5" fill="#0f172a"/>
+          <circle cx="127" cy="40" r="2.5" fill="#0f172a"/><circle cx="135" cy="40" r="2.5" fill="#0f172a"/>
+
+          <text x="8" y="80" font-size="11" font-weight="bold" fill="#334155">Lewis:</text>
+          <text x="75" y="82" font-size="16" font-weight="bold">O = O</text>
+          <circle cx="77" cy="63" r="2.5" fill="#0f172a"/><circle cx="85" cy="63" r="2.5" fill="#0f172a"/>
+          <circle cx="77" cy="90" r="2.5" fill="#0f172a"/><circle cx="85" cy="90" r="2.5" fill="#0f172a"/>
+          <circle cx="117" cy="63" r="2.5" fill="#0f172a"/><circle cx="125" cy="63" r="2.5" fill="#0f172a"/>
+          <circle cx="117" cy="90" r="2.5" fill="#0f172a"/><circle cx="125" cy="90" r="2.5" fill="#0f172a"/>
+
+          <text x="8" y="125" font-size="11" font-weight="bold" fill="#334155">CTCT:</text>
+          <text x="85" y="127" font-size="16" font-weight="bold" fill="#1d4ed8">O = O</text>
+        </svg>
+      </div>
+
+      <!-- N2 -->
+      <div class="card">
+        <h4>3. Nitrogen (N<sub>2</sub>)</h4>
+        <p class="sub">Liên kết ba (3 cặp e chung)</p>
+        <svg viewBox="0 0 220 140" width="100%">
+          <text x="8" y="30" font-size="11" font-weight="bold" fill="#334155">CT e:</text>
+          <circle cx="65" cy="23" r="2.5" fill="#0f172a"/><circle cx="65" cy="31" r="2.5" fill="#0f172a"/>
+          <text x="72" y="32" font-size="16" font-weight="bold">N</text>
+          <circle cx="96" cy="23" r="3" fill="#dc2626"/><circle cx="96" cy="31" r="3" fill="#dc2626"/>
+          <circle cx="105" cy="23" r="3" fill="#dc2626"/><circle cx="105" cy="31" r="3" fill="#dc2626"/>
+          <circle cx="114" cy="23" r="3" fill="#dc2626"/><circle cx="114" cy="31" r="3" fill="#dc2626"/>
+          <text x="125" y="32" font-size="16" font-weight="bold">N</text>
+          <circle cx="145" cy="23" r="2.5" fill="#0f172a"/><circle cx="145" cy="31" r="2.5" fill="#0f172a"/>
+
+          <text x="8" y="80" font-size="11" font-weight="bold" fill="#334155">Lewis:</text>
+          <circle cx="65" cy="73" r="2.5" fill="#0f172a"/><circle cx="65" cy="81" r="2.5" fill="#0f172a"/>
+          <text x="72" y="82" font-size="16" font-weight="bold">N &equiv; N</text>
+          <circle cx="132" cy="73" r="2.5" fill="#0f172a"/><circle cx="132" cy="81" r="2.5" fill="#0f172a"/>
+
+          <text x="8" y="125" font-size="11" font-weight="bold" fill="#334155">CTCT:</text>
+          <text x="82" y="127" font-size="16" font-weight="bold" fill="#1d4ed8">N &equiv; N</text>
+        </svg>
+      </div>
+
+      <!-- CO2 -->
+      <div class="card">
+        <h4>4. Carbon dioxide (CO<sub>2</sub>)</h4>
+        <p class="sub">Hai liên kết đôi (phân tử thẳng)</p>
+        <svg viewBox="0 0 220 140" width="100%">
+          <text x="8" y="30" font-size="11" font-weight="bold" fill="#334155">CT e:</text>
+          <text x="52" y="32" font-size="15" font-weight="bold">O</text>
+          <circle cx="54" cy="13" r="2.3" fill="#0f172a"/><circle cx="61" cy="13" r="2.3" fill="#0f172a"/>
+          <circle cx="54" cy="40" r="2.3" fill="#0f172a"/><circle cx="61" cy="40" r="2.3" fill="#0f172a"/>
+          <circle cx="74" cy="23" r="2.7" fill="#dc2626"/><circle cx="74" cy="31" r="2.7" fill="#dc2626"/>
+          <circle cx="82" cy="23" r="2.7" fill="#dc2626"/><circle cx="82" cy="31" r="2.7" fill="#dc2626"/>
+          <text x="92" y="32" font-size="15" font-weight="bold">C</text>
+          <circle cx="112" cy="23" r="2.7" fill="#dc2626"/><circle cx="112" cy="31" r="2.7" fill="#dc2626"/>
+          <circle cx="120" cy="23" r="2.7" fill="#dc2626"/><circle cx="120" cy="31" r="2.7" fill="#dc2626"/>
+          <text x="130" y="32" font-size="15" font-weight="bold">O</text>
+          <circle cx="132" cy="13" r="2.3" fill="#0f172a"/><circle cx="139" cy="13" r="2.3" fill="#0f172a"/>
+          <circle cx="132" cy="40" r="2.3" fill="#0f172a"/><circle cx="139" cy="40" r="2.3" fill="#0f172a"/>
+
+          <text x="8" y="80" font-size="11" font-weight="bold" fill="#334155">Lewis:</text>
+          <text x="58" y="82" font-size="15" font-weight="bold">O = C = O</text>
+          <circle cx="60" cy="63" r="2.3" fill="#0f172a"/><circle cx="67" cy="63" r="2.3" fill="#0f172a"/>
+          <circle cx="60" cy="90" r="2.3" fill="#0f172a"/><circle cx="67" cy="90" r="2.3" fill="#0f172a"/>
+          <circle cx="126" cy="63" r="2.3" fill="#0f172a"/><circle cx="133" cy="63" r="2.3" fill="#0f172a"/>
+          <circle cx="126" cy="90" r="2.3" fill="#0f172a"/><circle cx="133" cy="90" r="2.3" fill="#0f172a"/>
+
+          <text x="8" y="125" font-size="11" font-weight="bold" fill="#334155">CTCT:</text>
+          <text x="64" y="127" font-size="15" font-weight="bold" fill="#1d4ed8">O = C = O</text>
+        </svg>
+      </div>
+    </div>
+
+    <h3 style="color:var(--primary); margin-bottom:6px;">Mô phỏng trực quan: Xen phủ orbital tạo liên kết &sigma; và liên kết &pi;</h3>
+    <div class="grid-2">
+      <div class="card">
+        <h4>(a) Xen phủ trục s – s tạo liên kết &sigma; (H<sub>2</sub>)</h4>
+        <svg viewBox="0 0 320 120" width="100%">
+          <line x1="20" y1="60" x2="295" y2="60" stroke="#94a3b8" stroke-dasharray="4"/>
+          <text x="300" y="64" font-size="12" font-style="italic" fill="#475569">z</text>
+          <circle cx="125" cy="60" r="45" fill="#60a5fa" fill-opacity="0.55" stroke="#1d4ed8" stroke-width="2"/>
+          <circle cx="195" cy="60" r="45" fill="#60a5fa" fill-opacity="0.55" stroke="#1d4ed8" stroke-width="2"/>
+          <circle cx="125" cy="60" r="3" fill="#0f172a"/><circle cx="195" cy="60" r="3" fill="#0f172a"/>
+          <text x="115" y="78" font-size="12" font-weight="bold">H (1s)</text>
+          <text x="185" y="78" font-size="12" font-weight="bold">H (1s)</text>
+        </svg>
+      </div>
+
+      <div class="card">
+        <h4>(b) Xen phủ trục s – p<sub>z</sub> tạo liên kết &sigma; (HCl)</h4>
+        <svg viewBox="0 0 320 120" width="100%">
+          <line x1="20" y1="60" x2="295" y2="60" stroke="#94a3b8" stroke-dasharray="4"/>
+          <text x="300" y="64" font-size="12" font-style="italic" fill="#475569">z</text>
+          <circle cx="105" cy="60" r="38" fill="#60a5fa" fill-opacity="0.55" stroke="#1d4ed8" stroke-width="2"/>
+          <ellipse cx="165" cy="60" rx="35" ry="18" fill="#34d399" fill-opacity="0.6" stroke="#059669" stroke-width="2"/>
+          <ellipse cx="235" cy="60" rx="35" ry="18" fill="#34d399" fill-opacity="0.6" stroke="#059669" stroke-width="2"/>
+          <circle cx="105" cy="60" r="3" fill="#0f172a"/><circle cx="200" cy="60" r="3" fill="#0f172a"/>
+          <text x="90" y="78" font-size="12" font-weight="bold">H (1s)</text>
+          <text x="186" y="78" font-size="12" font-weight="bold">Cl (3p<tspan dy="3" font-size="9">z</tspan>)</text>
+        </svg>
+      </div>
+
+      <div class="card">
+        <h4>(c) Xen phủ trục p<sub>z</sub> – p<sub>z</sub> tạo liên kết &sigma; (Cl<sub>2</sub>)</h4>
+        <svg viewBox="0 0 320 120" width="100%">
+          <line x1="20" y1="60" x2="295" y2="60" stroke="#94a3b8" stroke-dasharray="4"/>
+          <text x="300" y="64" font-size="12" font-style="italic" fill="#475569">z</text>
+          <ellipse cx="75" cy="60" rx="34" ry="17" fill="#fbbf24" fill-opacity="0.6" stroke="#d97706" stroke-width="2"/>
+          <ellipse cx="143" cy="60" rx="34" ry="17" fill="#fbbf24" fill-opacity="0.6" stroke="#d97706" stroke-width="2"/>
+          <ellipse cx="177" cy="60" rx="34" ry="17" fill="#fbbf24" fill-opacity="0.6" stroke="#d97706" stroke-width="2"/>
+          <ellipse cx="245" cy="60" rx="34" ry="17" fill="#fbbf24" fill-opacity="0.6" stroke="#d97706" stroke-width="2"/>
+          <circle cx="109" cy="60" r="3" fill="#0f172a"/><circle cx="211" cy="60" r="3" fill="#0f172a"/>
+          <text x="92" y="92" font-size="12" font-weight="bold">Cl (3p<tspan dy="3" font-size="9">z</tspan>)</text>
+          <text x="195" y="92" font-size="12" font-weight="bold">Cl (3p<tspan dy="3" font-size="9">z</tspan>)</text>
+        </svg>
+      </div>
+
+      <div class="card">
+        <h4>(d) Xen phủ bên p<sub>x</sub> – p<sub>x</sub> (hoặc p<sub>y</sub> – p<sub>y</sub>) tạo liên kết &pi;</h4>
+        <svg viewBox="0 0 320 120" width="100%">
+          <line x1="20" y1="60" x2="295" y2="60" stroke="#94a3b8" stroke-dasharray="4"/>
+          <text x="300" y="64" font-size="12" font-style="italic" fill="#475569">z</text>
+          <ellipse cx="125" cy="33" rx="16" ry="26" fill="#f472b6" fill-opacity="0.6" stroke="#db2777" stroke-width="2"/>
+          <ellipse cx="125" cy="87" rx="16" ry="26" fill="#f472b6" fill-opacity="0.6" stroke="#db2777" stroke-width="2"/>
+          <ellipse cx="195" cy="33" rx="16" ry="26" fill="#f472b6" fill-opacity="0.6" stroke="#db2777" stroke-width="2"/>
+          <ellipse cx="195" cy="87" rx="16" ry="26" fill="#f472b6" fill-opacity="0.6" stroke="#db2777" stroke-width="2"/>
+          <line x1="125" y1="25" x2="195" y2="25" stroke="#be185d" stroke-width="2" stroke-dasharray="3"/>
+          <line x1="125" y1="95" x2="195" y2="95" stroke="#be185d" stroke-width="2" stroke-dasharray="3"/>
+          <circle cx="125" cy="60" r="3" fill="#0f172a"/><circle cx="195" cy="60" r="3" fill="#0f172a"/>
+          <text x="58" y="64" font-size="11" font-weight="bold">p<tspan dy="3" font-size="8">x</tspan><tspan dy="-3">/p</tspan><tspan dy="3" font-size="8">y</tspan></text>
+          <text x="218" y="64" font-size="11" font-weight="bold">p<tspan dy="3" font-size="8">x</tspan><tspan dy="-3">/p</tspan><tspan dy="3" font-size="8">y</tspan></text>
+        </svg>
+      </div>
+    </div>
+
+    <div class="eb-box">
+      <strong>2. Năng lượng liên kết (E<sub>b</sub>):</strong> Là năng lượng cần thiết để phá vỡ 1 mol liên kết xác định ở thể khí thành các nguyên tử ở thể khí (đơn vị: kJ/mol). <strong>E<sub>b</sub> càng lớn &rarr; liên kết càng bền vững &rarr; phân tử càng khó bị phân hủy.</strong>
+    </div>
+  </div>
+
+  <!-- TAB 2: INTERACTIVE PRACTICE & 20 MCQs -->
+  <div id="tab-practice" class="tab-content">
+    <h2 class="sec-title teal">PHẦN B. BÀI TẬP RÈN LUYỆN KĨ NĂNG CƠ BẢN</h2>
+
+    <!-- BÀI 1 -->
+    <div class="exercise-card">
+      <h3>Bài 1. Khám phá sự góp chung electron & Biểu diễn công thức</h3>
+      <table>
+        <thead>
+          <tr>
+            <th class="teal-th">Phân tử</th>
+            <th class="teal-th">Số e mỗi nguyên tử góp chung</th>
+            <th class="teal-th">Số cặp e dùng chung</th>
+            <th class="teal-th">Loại liên kết trong phân tử</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="text-align:center;"><strong>F<sub>2</sub></strong> (Z<sub>F</sub> = 9)</td>
+            <td>
+              <select id="b1_1a">
+                <option value="">-- Chọn --</option>
+                <option value="1">Mỗi F góp 1 electron</option>
+                <option value="2">Mỗi F góp 2 electron</option>
+                <option value="7">Mỗi F góp 7 electron</option>
+              </select><span id="fb_b1_1a"></span>
+            </td>
+            <td>
+              <select id="b1_1b">
+                <option value="">-- Chọn --</option>
+                <option value="1">1 cặp e chung</option>
+                <option value="2">2 cặp e chung</option>
+                <option value="3">3 cặp e chung</option>
+              </select><span id="fb_b1_1b"></span>
+            </td>
+            <td>
+              <select id="b1_1c">
+                <option value="">-- Chọn --</option>
+                <option value="don_kc">Liên kết đơn, không phân cực</option>
+                <option value="don_cc">Liên kết đơn, phân cực</option>
+                <option value="doi_kc">Liên kết đôi, không phân cực</option>
+              </select><span id="fb_b1_1c"></span>
+            </td>
+          </tr>
+          <tr>
+            <td style="text-align:center;"><strong>H<sub>2</sub>O</strong> (Z<sub>H</sub>=1, Z<sub>O</sub>=8)</td>
+            <td>
+              <select id="b1_2a">
+                <option value="">-- Chọn --</option>
+                <option value="ok">O góp 2e; mỗi H góp 1e</option>
+                <option value="w1">O góp 1e; mỗi H góp 2e</option>
+                <option value="w2">O góp 6e; mỗi H góp 1e</option>
+              </select><span id="fb_b1_2a"></span>
+            </td>
+            <td>
+              <select id="b1_2b">
+                <option value="">-- Chọn --</option>
+                <option value="1">1 cặp e chung</option>
+                <option value="2">2 cặp e chung</option>
+                <option value="4">4 cặp e chung</option>
+              </select><span id="fb_b1_2b"></span>
+            </td>
+            <td>
+              <select id="b1_2c">
+                <option value="">-- Chọn --</option>
+                <option value="don_cc">2 liên kết đơn, phân cực</option>
+                <option value="doi_cc">1 liên kết đôi, phân cực</option>
+                <option value="don_kc">2 liên kết đơn, không phân cực</option>
+              </select><span id="fb_b1_2c"></span>
+            </td>
+          </tr>
+          <tr>
+            <td style="text-align:center;"><strong>NH<sub>3</sub></strong> (Z<sub>N</sub>=7, Z<sub>H</sub>=1)</td>
+            <td>
+              <select id="b1_3a">
+                <option value="">-- Chọn --</option>
+                <option value="ok">N góp 3e; mỗi H góp 1e</option>
+                <option value="w1">N góp 5e; mỗi H góp 1e</option>
+                <option value="w2">N góp 1e; mỗi H góp 3e</option>
+              </select><span id="fb_b1_3a"></span>
+            </td>
+            <td>
+              <select id="b1_3b">
+                <option value="">-- Chọn --</option>
+                <option value="2">2 cặp e chung</option>
+                <option value="3">3 cặp e chung</option>
+                <option value="4">4 cặp e chung</option>
+              </select><span id="fb_b1_3b"></span>
+            </td>
+            <td>
+              <select id="b1_3c">
+                <option value="">-- Chọn --</option>
+                <option value="don_cc">3 liên kết đơn, phân cực</option>
+                <option value="ba_cc">1 liên kết ba, phân cực</option>
+                <option value="don_kc">3 liên kết đơn, không phân cực</option>
+              </select><span id="fb_b1_3c"></span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- BÀI 2 -->
+    <div class="exercise-card">
+      <h3>Bài 2. Xen phủ orbital nguyên tử – Đếm số liên kết &sigma; và &pi;</h3>
+      <table>
+        <thead>
+          <tr>
+            <th class="teal-th">Phân tử</th>
+            <th class="teal-th">Kiểu xen phủ orbital tạo liên kết</th>
+            <th class="teal-th">Số liên kết &sigma;</th>
+            <th class="teal-th">Số liên kết &pi;</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="text-align:center;"><strong>H<sub>2</sub></strong></td>
+            <td>
+              <select id="b2_1a">
+                <option value="">-- Chọn kiểu xen phủ --</option>
+                <option value="ss">Xen phủ trục s – s</option>
+                <option value="spz">Xen phủ trục s – pz</option>
+                <option value="pzpz">Xen phủ trục pz – pz</option>
+              </select><span id="fb_b2_1a"></span>
+            </td>
+            <td><input type="number" id="b2_1b" min="0" max="10" placeholder="Số lk σ"><span id="fb_b2_1b"></span></td>
+            <td><input type="number" id="b2_1c" min="0" max="10" placeholder="Số lk π"><span id="fb_b2_1c"></span></td>
+          </tr>
+          <tr>
+            <td style="text-align:center;"><strong>HCl</strong></td>
+            <td>
+              <select id="b2_2a">
+                <option value="">-- Chọn kiểu xen phủ --</option>
+                <option value="ss">Xen phủ trục s – s</option>
+                <option value="spz">Xen phủ trục s – pz</option>
+                <option value="pzpz">Xen phủ trục pz – pz</option>
+              </select><span id="fb_b2_2a"></span>
+            </td>
+            <td><input type="number" id="b2_2b" min="0" max="10" placeholder="Số lk σ"><span id="fb_b2_2b"></span></td>
+            <td><input type="number" id="b2_2c" min="0" max="10" placeholder="Số lk π"><span id="fb_b2_2c"></span></td>
+          </tr>
+          <tr>
+            <td style="text-align:center;"><strong>C<sub>2</sub>H<sub>4</sub></strong> (CH<sub>2</sub>=CH<sub>2</sub>)</td>
+            <td>
+              <select id="b2_3a">
+                <option value="">-- Chọn kiểu xen phủ --</option>
+                <option value="both">Xen phủ trục tạo &sigma; và xen phủ bên p<sub>x</sub>–p<sub>x</sub> (hoặc p<sub>y</sub>–p<sub>y</sub>) tạo &pi;</option>
+                <option value="only_s">Chỉ có xen phủ trục</option>
+                <option value="only_p">Chỉ có xen phủ bên</option>
+              </select><span id="fb_b2_3a"></span>
+            </td>
+            <td><input type="number" id="b2_3b" min="0" max="10" placeholder="Số lk σ"><span id="fb_b2_3b"></span></td>
+            <td><input type="number" id="b2_3c" min="0" max="10" placeholder="Số lk π"><span id="fb_b2_3c"></span></td>
+          </tr>
+          <tr>
+            <td style="text-align:center;"><strong>C<sub>2</sub>H<sub>2</sub></strong> (CH&equiv;CH)</td>
+            <td>
+              <select id="b2_4a">
+                <option value="">-- Chọn kiểu xen phủ --</option>
+                <option value="both">Xen phủ trục tạo &sigma; và xen phủ bên p<sub>x</sub>–p<sub>x</sub>, p<sub>y</sub>–p<sub>y</sub> tạo 2 liên kết &pi;</option>
+                <option value="only_s">Chỉ có xen phủ trục</option>
+                <option value="only_p">Chỉ có xen phủ bên</option>
+              </select><span id="fb_b2_4a"></span>
+            </td>
+            <td><input type="number" id="b2_4b" min="0" max="10" placeholder="Số lk σ"><span id="fb_b2_4b"></span></td>
+            <td><input type="number" id="b2_4c" min="0" max="10" placeholder="Số lk π"><span id="fb_b2_4c"></span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2 class="sec-title rust">PHẦN C. 20 CÂU TRẮC NGHIỆM KHÁCH QUAN NHIỀU LỰA CHỌN (BAO PHỦ TOÀN BÀI)</h2>
+    <div id="mcqContainer" class="mcq-grid"></div>
+
+    <div class="btn-bar">
+      <button class="btn btn-submit" onclick="gradeWorksheet()">✅ Nộp Bài & Chấm Điểm</button>
+      <button class="btn btn-reset" onclick="resetWorksheet()">🔄 Làm Lại</button>
+      <button class="btn btn-print" onclick="window.print()">🖨️ In Phiếu / Xuất PDF</button>
+    </div>
+
+    <div id="resultBox" class="result-box"></div>
+  </div>
+</div>
+
+<script>
+const mcqList = [
+  {
+    q: "Câu 1. Liên kết cộng hóa trị là liên kết hóa học được hình thành giữa hai nguyên tử bằng:",
+    opts: ["A. lực hút tĩnh điện giữa hai ion trái dấu.", "B. một hay nhiều cặp electron dùng chung.", "C. sự cho – nhận hoàn toàn electron.", "D. các electron tự do chuyển động trong mạng tinh thể."],
+    ans: "B", exp: "Bản chất liên kết cộng hóa trị là dùng chung một hay nhiều cặp electron."
+  },
+  {
+    q: "Câu 2. Liên kết cộng hóa trị thường được hình thành giữa:",
+    opts: ["A. các nguyên tử nguyên tố kim loại với nhau.", "B. các nguyên tử nguyên tố phi kim với nhau.", "C. nguyên tử kim loại điển hình và phi kim điển hình.", "D. các nguyên tử khí hiếm với nhau."],
+    ans: "B", exp: "Các nguyên tử phi kim có độ âm điện lớn, gần nhau nên góp chung electron."
+  },
+  {
+    q: "Câu 3. Khi cặp electron dùng chung chỉ do một nguyên tử đóng góp, liên kết cộng hóa trị đó được gọi là:",
+    opts: ["A. liên kết ion.", "B. liên kết hydrogen.", "C. liên kết cho – nhận.", "D. liên kết kim loại."],
+    ans: "C", exp: "Liên kết cho – nhận là trường hợp đặc biệt của liên kết cộng hóa trị."
+  },
+  {
+    q: "Câu 4. Số cặp electron dùng chung trong các phân tử O<sub>2</sub>, N<sub>2</sub>, F<sub>2</sub> lần lượt là:",
+    opts: ["A. 2, 3, 1.", "B. 2, 3, 4.", "C. 1, 3, 2.", "D. 2, 2, 1."],
+    ans: "A", exp: "O=O (2 cặp), N≡N (3 cặp), F—F (1 cặp)."
+  },
+  {
+    q: "Câu 5. Để đạt cấu hình electron bền vững của khí hiếm gần nhất theo quy tắc octet, khi tạo thành phân tử NH<sub>3</sub>, nguyên tử nitrogen (Z = 7) đã góp chung bao nhiêu electron với ba nguyên tử hydrogen?",
+    opts: ["A. 1 electron.", "B. 2 electron.", "C. 3 electron.", "D. 5 electron."],
+    ans: "C", exp: "N có 5e lớp ngoài cùng, góp chung 3e với 3 nguyên tử H để đạt 8e."
+  },
+  {
+    q: "Câu 6. Tổng số cặp electron hóa trị riêng (chưa tham gia liên kết) của tất cả các nguyên tử trong phân tử CO<sub>2</sub> là:",
+    opts: ["A. 2.", "B. 3.", "C. 4.", "D. 6."],
+    ans: "C", exp: "Công thức Lewis :Ö=C=Ö: có 2 cặp e riêng trên mỗi nguyên tử O → tổng 4 cặp."
+  },
+  {
+    q: "Câu 7. Phân tử nào sau đây có liên kết cộng hóa trị <strong>không phân cực</strong>?",
+    opts: ["A. HCl.", "B. H<sub>2</sub>O.", "C. N<sub>2</sub>.", "D. NH<sub>3</sub>."],
+    ans: "C", exp: "N₂ gồm hai nguyên tử giống nhau nên Δχ = 0."
+  },
+  {
+    q: "Câu 8. Dãy các chất nào sau đây mà tất cả các phân tử đều chỉ chứa liên kết cộng hóa trị?",
+    opts: ["A. BaCl<sub>2</sub>, NaCl, NO<sub>2</sub>.", "B. SO<sub>3</sub>, H<sub>2</sub>S, H<sub>2</sub>O.", "C. SO<sub>2</sub>, CO<sub>2</sub>, Na<sub>2</sub>O.", "D. CaCl<sub>2</sub>, F<sub>2</sub>O, HCl."],
+    ans: "B", exp: "SO₃, H₂S, H₂O đều tạo bởi các nguyên tố phi kim."
+  },
+  {
+    q: "Câu 9. Cho độ âm điện: H (2,20); Cl (3,16); Na (0,93); O (3,44). Dựa vào hiệu độ âm điện (&Delta;&chi;), liên kết trong phân tử HCl thuộc loại:",
+    opts: ["A. liên kết cộng hóa trị không phân cực.", "B. liên kết cộng hóa trị phân cực.", "C. liên kết ion.", "D. liên kết cho – nhận."],
+    ans: "B", exp: "Δχ = 3,16 − 2,20 = 0,96 nằm trong khoảng [0,4; 1,7) → cộng hóa trị phân cực."
+  },
+  {
+    q: "Câu 10. Phân tử nào sau đây chứa liên kết cộng hóa trị phân cực nhưng <strong>phân tử không phân cực</strong> do cấu trúc đối xứng thẳng?",
+    opts: ["A. H<sub>2</sub>O.", "B. NH<sub>3</sub>.", "C. HCl.", "D. CO<sub>2</sub>."],
+    ans: "D", exp: "CO₂ thẳng hàng O=C=O nên hai momen lưỡng cực triệt tiêu nhau."
+  },
+  {
+    q: "Câu 11. Liên kết xichma (&sigma;) là liên kết cộng hóa trị được hình thành do:",
+    opts: ["A. sự xen phủ bên của hai orbital p<sub>x</sub> hoặc p<sub>y</sub>.", "B. lực hút tĩnh điện giữa hai ion mang điện trái dấu.", "C. sự xen phủ trục của hai orbital dọc theo trục nối tâm hai hạt nhân.", "D. sự chuyển hẳn electron từ nguyên tử này sang nguyên tử kia."],
+    ans: "C", exp: "Xen phủ trục dọc theo trục liên kết tạo liên kết σ."
+  },
+  {
+    q: "Câu 12. Liên kết pi (&pi;) là liên kết cộng hóa trị được hình thành do:",
+    opts: ["A. sự xen phủ trục của hai orbital s.", "B. sự xen phủ trục của orbital s và orbital p<sub>z</sub>.", "C. sự xen phủ bên của hai orbital p<sub>x</sub> – p<sub>x</sub> hoặc p<sub>y</sub> – p<sub>y</sub>.", "D. sự xen phủ trục của hai orbital p<sub>z</sub> – p<sub>z</sub>."],
+    ans: "C", exp: "Xen phủ bên của các orbital pₓ hoặc pᵧ vuông góc trục z tạo liên kết π."
+  },
+  {
+    q: "Câu 13. Liên kết trong phân tử nào sau đây được hình thành nhờ sự xen phủ trục orbital s – s?",
+    opts: ["A. H<sub>2</sub>.", "B. Cl<sub>2</sub>.", "C. NH<sub>3</sub>.", "D. HCl."],
+    ans: "A", exp: "Hai nguyên tử H (1s¹) xen phủ trục s–s."
+  },
+  {
+    q: "Câu 14. Liên kết trong phân tử Cl<sub>2</sub> được hình thành nhờ sự xen phủ:",
+    opts: ["A. trục giữa hai orbital s – s.", "B. trục giữa hai orbital p<sub>z</sub> – p<sub>z</sub>.", "C. bên giữa hai orbital p<sub>x</sub> – p<sub>x</sub>.", "D. trục giữa orbital s – p<sub>z</sub>."],
+    ans: "B", exp: "Hai orbital 3p_z của Cl xen phủ trục dọc theo trục z."
+  },
+  {
+    q: "Câu 15. Các liên kết trong phân tử oxygen (O<sub>2</sub>) gồm:",
+    opts: ["A. 2 liên kết &pi;.", "B. 2 liên kết &sigma;.", "C. 1 liên kết &sigma; và 1 liên kết &pi;.", "D. 1 liên kết &sigma;."],
+    ans: "C", exp: "Liên kết đôi O=O gồm 1 liên kết σ và 1 liên kết π."
+  },
+  {
+    q: "Câu 16. Số liên kết &sigma; và liên kết &pi; có trong phân tử ethylene (C<sub>2</sub>H<sub>4</sub>) lần lượt là:",
+    opts: ["A. 4 và 1.", "B. 5 và 1.", "C. 4 và 2.", "D. 5 và 2."],
+    ans: "B", exp: "CH₂=CH₂ có 4 liên kết đơn C–H (4σ) và 1 liên kết đôi C=C (1σ + 1π) → 5σ và 1π."
+  },
+  {
+    q: "Câu 17. Số liên kết &sigma; và liên kết &pi; có trong phân tử acetylene (C<sub>2</sub>H<sub>2</sub>) lần lượt là:",
+    opts: ["A. 2 và 3.", "B. 3 và 1.", "C. 2 và 2.", "D. 3 và 2."],
+    ans: "D", exp: "H–C≡C–H có 2 liên kết đơn C–H (2σ) và 1 liên kết ba C≡C (1σ + 2π) → 3σ và 2π."
+  },
+  {
+    q: "Câu 18. Phát biểu nào sau đây <strong>không đúng</strong> khi so sánh liên kết &sigma; và liên kết &pi;?",
+    opts: ["A. Liên kết &sigma; bền vững hơn liên kết &pi;.", "B. Mọi liên kết đơn đều là liên kết &sigma;.", "C. Liên kết ba gồm 1 liên kết &sigma; và 2 liên kết &pi;.", "D. Sự xen phủ có tham gia của orbital s có thể tạo thành liên kết &pi;."],
+    ans: "D", exp: "Orbital s có dạng hình cầu đối xứng nên chỉ tham gia xen phủ trục tạo liên kết σ."
+  },
+  {
+    q: "Câu 19. Năng lượng liên kết (E<sub>b</sub>) đặc trưng cho độ bền của liên kết. Cho E<sub>b</sub> của H—Cl là 432 kJ/mol, H—Br là 366 kJ/mol, H—I là 298 kJ/mol. Thứ tự giảm dần độ bền nhiệt của các phân tử là:",
+    opts: ["A. HI > HBr > HCl.", "B. HCl > HBr > HI.", "C. HBr > HCl > HI.", "D. HCl > HI > HBr."],
+    ans: "B", exp: "E_b càng lớn liên kết càng bền: 432 > 366 > 298."
+  },
+  {
+    q: "Câu 20. Trong các chất/ion sau: NH<sub>4</sub><sup>+</sup>, CO, H<sub>2</sub>O, CH<sub>4</sub>, SO<sub>2</sub>, N<sub>2</sub>. Nhóm gồm các phân tử/ion có chứa <strong>liên kết cho – nhận</strong> là:",
+    opts: ["A. NH<sub>4</sub><sup>+</sup>, CO, SO<sub>2</sub>.", "B. H<sub>2</sub>O, CH<sub>4</sub>, N<sub>2</sub>.", "C. NH<sub>4</sub><sup>+</sup>, H<sub>2</sub>O, CO.", "D. CO, CH<sub>4</sub>, SO<sub>2</sub>."],
+    ans: "A", exp: "NH₄⁺ (N→H⁺), CO (O→C), SO₂ (S→O) đều có liên kết cho – nhận."
+  }
+];
+
+function renderMCQs() {
+  const container = document.getElementById('mcqContainer');
+  container.innerHTML = mcqList.map((item, idx) => {
+    const qName = `mcq_${idx}`;
+    const optsHtml = item.opts.map((opt, oIdx) => {
+      const letter = ['A', 'B', 'C', 'D'][oIdx];
+      return `<label><input type="radio" name="${qName}" value="${letter}"> ${opt}</label>`;
+    }).join('');
+    return `<div class="mcq-item">
+      <div><strong>${item.q}</strong></div>
+      <div class="mcq-options">${optsHtml}</div>
+      <span id="fb_${qName}"></span>
+    </div>`;
+  }).join('');
+}
+
+renderMCQs();
+
+function openTab(tabId, btn) {
+  document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+  document.getElementById(tabId).classList.add('active');
+  btn.classList.add('active');
+}
+
+function setFb(id, ok, msg) {
+  const el = document.getElementById(id);
+  el.className = ok ? 'correct-ans' : 'wrong-ans';
+  el.innerHTML = ok ? '✔ Chính xác!' : ('✘ Chưa đúng. ' + msg);
+}
+
+function gradeWorksheet() {
+  let score = 0;
+  const total = 41; // 21 items in Part B + 20 MCQs in Part C
+
+  const checksSelect = [
+    ['b1_1a', '1', 'Mỗi F có 7e ngoài cùng nên góp 1e.'],
+    ['b1_1b', '1', 'Có 1 cặp e chung (F—F).'],
+    ['b1_1c', 'don_kc', 'Liên kết đơn, không phân cực (Δχ = 0).'],
+    ['b1_2a', 'ok', 'O góp 2e; mỗi H góp 1e.'],
+    ['b1_2b', '2', 'Có 2 cặp e chung (H—O—H).'],
+    ['b1_2c', 'don_cc', '2 liên kết đơn O—H phân cực.'],
+    ['b1_3a', 'ok', 'N góp 3e; mỗi H góp 1e.'],
+    ['b1_3b', '3', 'Có 3 cặp e chung.'],
+    ['b1_3c', 'don_cc', '3 liên kết đơn N—H phân cực.'],
+    ['b2_1a', 'ss', 'H (1s) xen phủ trục s–s.'],
+    ['b2_2a', 'spz', 'H (1s) và Cl (3p_z) xen phủ trục s–p_z.'],
+    ['b2_3a', 'both', 'Có cả xen phủ trục (σ) và xen phủ bên p_x–p_x (hoặc p_y–p_y) tạo π.'],
+    ['b2_4a', 'both', 'Có cả xen phủ trục (σ) và 2 xen phủ bên p_x–p_x, p_y–p_y tạo 2π.']
+  ];
+
+  checksSelect.forEach(([id, ans, msg]) => {
+    const val = document.getElementById(id).value;
+    const ok = (val === ans);
+    if (ok) score++;
+    setFb('fb_' + id, ok, msg);
+  });
+
+  const checksNum = [
+    ['b2_1b', '1', 'Đáp án: 1 liên kết σ'],
+    ['b2_1c', '0', 'Đáp án: 0 liên kết π'],
+    ['b2_2b', '1', 'Đáp án: 1 liên kết σ'],
+    ['b2_2c', '0', 'Đáp án: 0 liên kết π'],
+    ['b2_3b', '5', 'Đáp án: 5 liên kết σ (4 C–H + 1 C–C)'],
+    ['b2_3c', '1', 'Đáp án: 1 liên kết π'],
+    ['b2_4b', '3', 'Đáp án: 3 liên kết σ (2 C–H + 1 C–C)'],
+    ['b2_4c', '2', 'Đáp án: 2 liên kết π']
+  ];
+
+  checksNum.forEach(([id, ans, msg]) => {
+    const val = document.getElementById(id).value.trim();
+    const ok = (val === ans);
+    if (ok) score++;
+    setFb('fb_' + id, ok, msg);
+  });
+
+  mcqList.forEach((item, idx) => {
+    const qName = `mcq_${idx}`;
+    const sel = document.querySelector(`input[name="${qName}"]:checked`);
+    const ok = sel && sel.value === item.ans;
+    if (ok) score++;
+    setFb('fb_' + qName, ok, `Đáp án ${item.ans}. ${item.exp}`);
+  });
+
+  const final10 = ((score / total) * 10).toFixed(1);
+  const box = document.getElementById('resultBox');
+  box.style.display = 'block';
+  box.innerHTML = `<h3 style="margin:0 0 6px; color:#065f46;">🎉 KẾT QUẢ BÀI LÀM: ${score}/${total} ý đúng — Điểm số: ${final10} / 10 điểm</h3>
+  <p style="margin:0;">Xem chi tiết lời giải thích từng câu ở phía trên để nắm vững toàn bộ kiến thức bài Liên kết cộng hóa trị nhé!</p>`;
+  box.scrollIntoView({ behavior: 'smooth' });
+}
+
+function resetWorksheet() {
+  document.querySelectorAll('select').forEach(s => s.value = '');
+  document.querySelectorAll('input[type="number"]').forEach(i => i.value = '');
+  document.querySelectorAll('input[type="radio"]').forEach(r => r.checked = false);
+  document.querySelectorAll('[id^="fb_"]').forEach(span => { span.innerHTML = ''; span.className = ''; });
+  document.getElementById('resultBox').style.display = 'none';
+}
+</script>
+</body>
+</html>
